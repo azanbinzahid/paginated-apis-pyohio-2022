@@ -1,5 +1,5 @@
 """
-Paginated API: A cursor-based strategy
+Paginated API: A link-based strategy
 """
 
 import requests
@@ -7,24 +7,24 @@ import requests
 results = []
 max_results = 500
 next = True
-start = 0
+
 
 while next:
-    url = "https://cursor-based-api/example"  # not a real endpoint
+    url = "https://swapi.dev/api/people"
+    url = next if len(results) else url # set next url only after first call
+
     params = {
-        'limit': 30,  # assuming constant limit / number of results
-        'after': start,  # request id after start value
-        # 'before': before,  # same as above
+        # 'limit': 30,  # assuming constant limit / number of results
+        # 'next': next,  # it can be a next page id or null / API Specific
     }
 
     r = requests.get(url, params=params)
 
     if r.ok:
         r = r.json()
-        # could be has_more attrib / API specific
-        next = r['next'] if 'next' in r else False
-        start = r['before']  # after value for next call / API specific
-        results.extend(r['products'])
+        next = r['next'] if 'next' in r else False  # set next url
+        results.extend(r['results'])
+
     else:
         print(r.status_code)
         break

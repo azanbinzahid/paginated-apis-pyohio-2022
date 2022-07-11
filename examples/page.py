@@ -5,11 +5,11 @@ Paginated API: An page-based strategy
 import requests
 
 results = []
-page = 0
-total = -1  # init
 max_pages = 3
+page = 0
+total = 1  # init
 
-while page != total:
+while page < total:
     url = "https://api.instantwebtools.net/v1/passenger"
     params = {
         'page': page,  # offset value, default to 0
@@ -22,6 +22,7 @@ while page != total:
         r = r.json()
         total = r['totalPages']  # constant value set
         results.extend(r['data'])
+
     else:
         print(r.status_code)
         break
